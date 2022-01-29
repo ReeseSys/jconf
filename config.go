@@ -34,6 +34,15 @@ func (c *Config) readConfig() error {
 		return fmt.Errorf("Could not parse config %s: %s", c.file, err)
 	}
 
+	// Allow environment variable to override config setting.
+	for key, _ := range c.config {
+		newVal, ok := os.LookupEnv(key)
+		if ok {
+			c.config[key] = newVal
+			//fmt.Printf("Overriding config value %s:%s with env variable: %s\n", key, val, newVal)
+		}
+	}
+
 	return nil
 }
 
